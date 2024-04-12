@@ -22,6 +22,6 @@ typedef struct _MODULE_CONFIG {
     BOOLEAN     bInit;
 } MODULE_CONFIG, *PMODULE_CONFIG;
 
-BOOL InitSyscalls(_Out_ PSYSCALL_API pSyscallApi);
+EXTERN_C BOOL InitSyscalls(_Out_ PSYSCALL_API pSyscallApi);
 
 #endif //INDIRECTPROXYCALL_SYSCALLS_H

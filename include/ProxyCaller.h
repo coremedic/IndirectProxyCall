@@ -3,6 +3,8 @@
 
 #include <windows.h>
 
+#define NtCurrentProcess() ((HANDLE)(LONG_PTR)-1)
+
 template<UINT64 N>
 struct SYSCALL_ARGS {
     UINT_PTR    pSyscallInstruction;
