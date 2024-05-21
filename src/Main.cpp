@@ -17,6 +17,7 @@ int main() {
     PVOID       pAddress    = NULL;
     PTP_WORK    WorkReturn  = NULL;
     SIZE_T      memSize     = 4096;
+    NTSTATUS    ntStatus    = 0x0;
 
     AddWin32uToIat();
     if (!InitSyscalls(&g_syscallApi)) {
@@ -32,6 +33,7 @@ int main() {
     ntAllocateVirtualMemoryArgs.pArgs[3]            = (UINT_PTR)&memSize;
     ntAllocateVirtualMemoryArgs.pArgs[4]            = (UINT_PTR)(MEM_COMMIT|MEM_RESERVE);
     ntAllocateVirtualMemoryArgs.pArgs[5]            = (UINT_PTR)PAGE_EXECUTE_READWRITE;
+    ntAllocateVirtualMemoryArgs.pNtStatus           = &ntStatus;
 
     __typeof__(TpAllocWork)*    TpAllocWork     = (PVOID)GetProcAddress(GetModuleHandleA("ntdll.dll"), "TpAllocWork");
     __typeof__(TpPostWork)*     TpPostWork      = (PVOID)GetProcAddress(GetModuleHandleA("ntdll.dll"), "TpPostWork");
@@ -44,6 +46,7 @@ int main() {
     Sleep(1000);
 
     printf("Memory allocated at: %p\n", pAddress);
+    printf("NTSTATUS: 0x%X\n", ntStatus);
     getchar();
     return 0;
 }

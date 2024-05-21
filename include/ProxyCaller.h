@@ -11,6 +11,7 @@ struct SYSCALL_ARGS {
     DWORD       dwSsn;
     UINT64      argCount = N;
     UINT_PTR    pArgs[N];
+    NTSTATUS*   pNtStatus;
 };
 
 NTSYSAPI
