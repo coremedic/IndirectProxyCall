@@ -19,8 +19,8 @@ add_link_options(
 add_executable(
         IndirectProxyCall
         src/Main.cpp
-        include/Syscalls.h
         src/Syscalls.c
+        include/Syscalls.h
         include/ProxyCaller.h
 )
 

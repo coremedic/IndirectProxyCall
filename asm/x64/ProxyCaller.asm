@@ -5,26 +5,14 @@ option win64:1
 
 public ProxyCaller
 
-.data
-
-    qwOrignalReturnAddress  QWORD 0
-    qwNtStatus              QWORD 0
-
 .code
 
 ProxyCaller PROC
+
     mov rbx, rdx                        ; Back up struct to rbx
     mov r11, [rbx]                      ; UINT_PTR      pSyscallInstruction
     mov eax, [rbx + 08h]                ; DWORD         dwSsn
     mov r9,  [rbx + 010h]               ; UINT64        argCount
-    mov rcx, [rbx + 048h]               ; NTSTATUS*     pNtStatus
-    mov qwNtStatus, rcx
-
-    mov rdx, [rsp]                      ; Save original return address to rdx
-    mov qwOrignalReturnAddress, rdx     ; Perserve original return address in data segment
-    lea r8, [return_handler]            ; Load address of return_handler
-    mov [rsp], r8                       ; Overwrite return address with address of return_handler
-
 
     cmp r9,  4                          ; Check if there are more than 4 args
     jle register_args                   ; If 4 or fewer args, just load registers
@@ -55,13 +43,8 @@ register_args:
     mov  r9,  [rbx + 030h]              ; Load 4th arg
 
 syscall_jmp:
+    ud2                                 ; Trigger a illegal instruction exception
     jmp r11                             ; Jump to pSyscallInstruction
-
-return_handler:
-    mov rdx, qwOrignalReturnAddress     ; Restore original return address
-    mov rcx, [qwNtStatus]               ; Move pNtStatus pointer into rcx
-    mov [rcx], eax                      ; Move syscall NTSTATUS return to pNtStatus
-    jmp rdx                             ; Jump to original return address
 
 ProxyCaller ENDP
 
